@@ -1,5 +1,6 @@
 package com.gmail.v.c.charkin.gurmanfood.controller;
 
+import ch.qos.logback.classic.Logger;
 import com.gmail.v.c.charkin.gurmanfood.constants.Pages;
 import com.gmail.v.c.charkin.gurmanfood.constants.PathConstants;
 import com.gmail.v.c.charkin.gurmanfood.dto.request.UserRequest;
@@ -7,6 +8,8 @@ import com.gmail.v.c.charkin.gurmanfood.dto.response.MessageResponse;
 import com.gmail.v.c.charkin.gurmanfood.service.RegistrationService;
 import com.gmail.v.c.charkin.gurmanfood.utils.ControllerUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,20 +18,20 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RequestMapping(PathConstants.REGISTRATION)
 public class RegistrationController {
 
     private final RegistrationService registrationService;
     private final ControllerUtils controllerUtils;
 
-    @GetMapping
-    public String registration() {
-        return Pages.REGISTRATION;
+    @PostMapping("/registration")
+    public ResponseEntity<MessageResponse> registration(@RequestBody UserRequest user) {
+        MessageResponse response = registrationService.registration(user);
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping
+    /*@PostMapping
     public String registration(@RequestParam("g-recaptcha-response") String captchaResponse,
                                @Valid UserRequest user,
                                BindingResult bindingResult,
@@ -42,7 +45,7 @@ public class RegistrationController {
             return Pages.REGISTRATION;
         }
         return controllerUtils.setAlertFlashMessage(redirectAttributes, PathConstants.LOGIN, messageResponse);
-    }
+    }*/
 
     @GetMapping("/activate/{code}")
     public String activateEmailCode(@PathVariable String code, Model model) {
