@@ -1,18 +1,68 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 
 export const CartPage = () => {
     const [cartItems, setCartItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    const removeFromCart = (shawarmaId) => {
-        setCartItems(cartItems.filter(item => item.id !== shawarmaId));
+    useEffect(() => {
+        fetchCartItems();
+    }, []);
+
+    const fetchCartItems = async () => {
+        try {
+            const response = await fetch('/cart');
+            if (!response.ok) {
+                throw new Error('Failed to fetch cart items');
+            }
+            const data = await response.json();
+            setCartItems(data);
+        } catch (error) {
+            console.error('Error fetching cart:', error);
+            setError('Failed to load cart');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const removeFromCart = async (shawarmaId) => {
+        try {
+            const formData = new URLSearchParams();
+            formData.append('shawarmaId', shawarmaId);
+
+            const response = await fetch('/cart/remove', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData,
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to remove item from cart');
+            }
+
+            fetchCartItems();
+        } catch (error) {
+            console.error('Error removing item from cart:', error);
+            setError('Failed to remove item');
+        }
     };
 
     const getTotalPrice = () => {
         return cartItems.reduce((sum, item) => sum + item.price, 0);
     };
+
+    if (loading) {
+        return <div className="text-center py-5">Loading...</div>;
+    }
+
+    if (error) {
+        return <div className="text-center py-5 text-red-500">{error}</div>;
+    }
 
     return (
         <div className="bg-gray-100 py-5">
@@ -38,6 +88,7 @@ export const CartPage = () => {
                                     </div>
                                     <div className="w-3/6 px-4">
                                         <h5>{item.category} {item.shawarmaTitle}</h5>
+                                        <p className="text-gray-600">{item.description}</p>
                                     </div>
                                     <div className="w-2/6 text-right">
                                         <h5>{item.price} р.</h5>

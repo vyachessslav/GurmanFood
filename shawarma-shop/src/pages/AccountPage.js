@@ -39,7 +39,7 @@ const AccountPage = () => {
                             )}
                         </div>
 
-                        {/* User Info */}
+
                         <div className="col-md-4 mb-5">
                             <h4>
                                 <i className="fas fa-address-card mr-2"></i>

@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import ProductCarousel from '../components/ProductCarousel';
-import CategoryCarousel from '../components/CategoryCarousel';
 
 const HomePage = () => {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-
         fetchProducts();
     }, []);
 
     const fetchProducts = async () => {
         try {
-            const response = await fetch('http://localhost:8080/shawarma/popular');
+            const response = await fetch('/shawarma/popular');
+            if (!response.ok) {
+                throw new Error('Failed to fetch products');
+            }
             const data = await response.json();
-            setProducts(data);
+            setProducts(data.content || []);
         } catch (error) {
             console.error('Error fetching products:', error);
         }
@@ -29,7 +29,7 @@ const HomePage = () => {
         },
         {
             id: 3,
-            imageUrl: "https://e0.edimdoma.ru/data/posts/0002/8364/28364-ed4_wide.jpg?1691513110",
+            imageUrl: "https://avatars.mds.yandex.net/get-altay/4598810/2a0000017bbf266180c31deb17f28fc650ce/L_height",
             link: "/shawarma/3"
         }
     ];
@@ -39,32 +39,48 @@ const HomePage = () => {
         { name: 'Пицца', imageUrl: 'https://cdnn21.img.ria.ru/images/98976/61/989766135_0:105:2000:1230_1920x0_80_0_0_16a8fff0f23e9297155772f93b403aed.jpg' },
         { name: 'Бургер', imageUrl: 'https://avatars.mds.yandex.net/get-altay/4598810/2a0000017bbf266180c31deb17f28fc650ce/L_height' },
         { name: 'Фалафель', imageUrl: 'https://jonikitchen.ru/wp-content/uploads/2015/07/falafel.jpg' },
-        { name: 'Напиток', imageUrl: 'https://example.com/drink.jpg' }
+        { name: 'Напиток', imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZ6b7yL_XVyOGOpxw5_K7Gc4RlZGGkN2igqw&s' }
     ];
 
     return (
         <div className="bg-light min-h-screen">
-            {/* Main Carousel */}
-            <div id="carouselExampleControls" className="carousel slide carousel-fade" data-ride="carousel">
-                <div className="carousel-inner">
-                    {mainCarouselItems.map((item, index) => (
-                        <div key={item.id} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
-                            <Link to={item.link}>
-                                <img className="d-block w-100" src={item.imageUrl} alt={`Slide ${index + 1}`} />
-                            </Link>
+            <div className="container mt-5">
+                <div className="row justify-content-center">
+                    <div className="col-8">
+                        <div id="carouselExampleControls" className="carousel slide carousel-fade" data-ride="carousel">
+                            <div className="carousel-inner">
+                                {mainCarouselItems.map((item, index) => (
+                                    <div key={item.id} className={`carousel-item ${index === 0 ? 'active' : ''}`}>
+                                        <Link to={item.link}>
+                                            <img className="d-block w-100" src={item.imageUrl} alt={`Slide ${index + 1}`} />
+                                        </Link>
+                                    </div>
+                                ))}
+                            </div>
+                            <CarouselControls />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div className="container text-center my-3 mt-5">
+                <h3>У НАС ИМЕЕТСЯ:</h3>
+                <div className="row">
+                    {categories.map((category, index) => (
+                        <div key={index} className="col">
+                            <div className="card h-100">
+                                <img className="card-img-top" src={category.imageUrl} alt={category.name} />
+                                <div className="card-body">
+                                    <h5 className="card-title">{category.name}</h5>
+                                </div>
+                            </div>
                         </div>
                     ))}
                 </div>
-                <CarouselControls />
             </div>
 
-            {/* Categories Section */}
-            <div className="container text-center my-3 mt-5">
-                <h3>У НАС ИМЕЕТСЯ:</h3>
-                <CategoryCarousel categories={categories} />
-            </div>
 
-            {/* Halal/Haram Section */}
             <div className="container mt-5">
                 <div className="row">
                     <div className="col-lg-6">
@@ -77,17 +93,41 @@ const HomePage = () => {
                     <div className="col-lg-6">
                         <div className="card mb-5">
                             <Link to="/shawarma?moralitys=Халяль">
-                                <img className="img-fluid" src="https://media.istockphoto.com/id/1364094307/ru/vector/halal-symbol.jpg" alt="Халяль" />
+                                <img className="img-fluid" src="https://cdn-icons-png.flaticon.com/512/84/84666.png" alt="Халяль" />
                             </Link>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Popular Products Section */}
+
             <div className="container text-center my-3">
                 <h4>СПЕЦИАЛЬНО ДЛЯ ВАС:</h4>
-                <ProductCarousel products={products} />
+                <div id="shawarmaCarousel" className="carousel slide" data-ride="carousel">
+                    <div className="carousel-inner">
+                        {[0, 1, 2].map((page) => (
+                            <div key={page} className={`carousel-item ${page === 0 ? 'active' : ''}`}>
+                                <div className="row">
+                                    {products.slice(page * 4, (page + 1) * 4).map((product, index) => (
+                                        <div key={index} className="col-3">
+                                            <div className="card">
+                                                <img
+                                                    className="card-img-top"
+                                                    src={`/img/${product.filename}`}
+                                                    alt={product.shawarmaTitle}
+                                                />
+                                                <div className="card-body">
+                                                    <h5 className="card-title">{product.shawarmaTitle}</h5>
+                                                    <p className="card-text">{product.price} ₽</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
         </div>
     );

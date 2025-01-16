@@ -1,44 +1,35 @@
-// components/Pagination.js
+
 import React from 'react';
 
 const Pagination = ({ currentPage, totalPages, onPageChange, className = '' }) => {
     const pageSizes = [12, 24, 36];
 
-    // Создаем массив номеров страниц для отображения
+
     const getPageNumbers = () => {
         const pages = [];
-        const maxPagesToShow = 5; // Максимальное количество страниц для отображения
+        const maxPagesToShow = 5;
 
         if (totalPages <= maxPagesToShow) {
-            // Если общее количество страниц меньше максимального, показываем все
             for (let i = 0; i < totalPages; i++) {
                 pages.push(i + 1);
             }
         } else {
-            // Всегда показываем первую страницу
             pages.push(1);
 
-            // Вычисляем начальную и конечную страницы для текущего диапазона
             let start = Math.max(currentPage - 1, 2);
             let end = Math.min(start + 2, totalPages - 1);
             start = Math.min(start, totalPages - 3);
-
-            // Добавляем многоточие перед текущим диапазоном, если нужно
             if (start > 2) {
-                pages.push(-1); // -1 означает многоточие
+                pages.push(-1);
             }
 
-            // Добавляем страницы текущего диапазона
             for (let i = start; i <= end; i++) {
                 pages.push(i);
             }
 
-            // Добавляем многоточие после текущего диапазона, если нужно
             if (end < totalPages - 1) {
-                pages.push(-1); // -1 означает многоточие
+                pages.push(-1);
             }
-
-            // Всегда показываем последнюю страницу
             pages.push(totalPages);
         }
 
@@ -77,8 +68,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '' }) =
                         <button
                             className={`page-link text-dark`}
                             onClick={() => {
-                                // Здесь должна быть логика изменения размера страницы
-                                // Например, вызов родительской функции
                                 console.log(`Change page size to ${size}`);
                             }}
                         >

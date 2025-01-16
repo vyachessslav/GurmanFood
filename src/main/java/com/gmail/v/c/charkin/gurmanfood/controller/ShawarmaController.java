@@ -23,6 +23,10 @@ public class ShawarmaController {
     public ShawarmaController(ShawarmaService shawarmaService) {
         this.shawarmaService = shawarmaService;
     }
+    @GetMapping("/popular")
+    public ResponseEntity<?> getPopularShawarmas() {
+        return ResponseEntity.ok(new PageResponse<>(shawarmaService.getPopularShawarmas()));
+    }
 
     @GetMapping("/{shawarmaId}")
     public ResponseEntity<?> getShawarmaById(@PathVariable Long shawarmaId) {

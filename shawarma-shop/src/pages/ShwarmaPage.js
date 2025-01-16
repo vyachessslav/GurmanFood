@@ -13,7 +13,7 @@ const ShwarmaPage = () => {
 
     const fetchShawarma = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/shawarma/${shawarmaId}`);
+            const response = await fetch(`/shawarma/${shawarmaId}`);
             if (!response.ok) {
                 throw new Error('Failed to fetch shawarma');
             }
@@ -27,21 +27,25 @@ const ShwarmaPage = () => {
 
     const handleAddToCart = async () => {
         try {
-            const response = await fetch('http://localhost:8080/cart/add', {
+            const formData = new URLSearchParams();
+            formData.append('shawarmaId', shawarmaId);
+
+            const response = await fetch('/cart/add', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify({ shawarmaId }),
+                body: formData,
                 credentials: 'include'
             });
 
             if (!response.ok) {
-                throw new Error('Failed to add to cart');
+                const errorText = await response.text();
+                throw new Error(errorText || 'Failed to add to cart');
             }
 
-
             alert('Продукт добавлен в корзину');
+
         } catch (error) {
             console.error('Error adding to cart:', error);
             alert('Ошибка при добавлении в корзину');

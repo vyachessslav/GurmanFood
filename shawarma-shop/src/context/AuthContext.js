@@ -32,7 +32,6 @@ export const AuthProvider = ({ children }) => {
                 const userData = await response.json();
                 setUser(userData);
             } else {
-                // Если токен невалидный, очищаем storage
                 localStorage.removeItem('token');
                 setUser(null);
             }

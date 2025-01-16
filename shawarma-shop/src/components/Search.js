@@ -1,4 +1,4 @@
-// components/Search.js
+
 import React from 'react';
 
 const Search = ({ searchParams, setSearchParams, options }) => {

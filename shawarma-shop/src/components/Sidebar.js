@@ -1,4 +1,4 @@
-// components/Sidebar.js
+
 import React from 'react';
 
 const Sidebar = ({ filters, setFilters }) => {
@@ -12,7 +12,6 @@ const Sidebar = ({ filters, setFilters }) => {
         { start: 500, end: 5000, label: '500₽ - 5000₽' }
     ];
 
-    // Убедимся, что массивы существуют
     const selectedCategories = filters.categorys || [];
     const selectedMoralities = filters.moralitys || [];
 
