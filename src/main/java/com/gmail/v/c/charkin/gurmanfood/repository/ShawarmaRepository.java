@@ -29,6 +29,7 @@ public interface ShawarmaRepository extends JpaRepository<Shawarma, Long> {
             "AND (coalesce(:priceStart, null) IS NULL OR shawarma.price BETWEEN :priceStart AND :priceEnd) " +
             "ORDER BY shawarma.price ASC")
     Page<Shawarma> getShawarmasByFilterParams(
+
             List<String> categorys,
             List<String> moralitys,
             Integer priceStart,

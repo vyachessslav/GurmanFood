@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class SearchRequest {
+    //TODO отрефакторить нейминги
     private List<String> categorys;
     private List<String> moralitys;
     private Integer price = 0;
