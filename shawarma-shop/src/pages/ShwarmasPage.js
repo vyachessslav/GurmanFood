@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Pagination from '../components/Pagination';
 import Sidebar from '../components/Sidebar';
@@ -14,7 +13,7 @@ const ShwarmasPage = () => {
     });
 
     const [searchRequest, setSearchRequest] = useState({
-        categorys: [],      //
+        categorys: [],
         moralitys: [],
         startingPrice: 0,
         endingPrice: 999999,
@@ -35,7 +34,6 @@ const ShwarmasPage = () => {
                 ...searchRequest
             });
 
-
             searchRequest.categorys.forEach(category => {
                 params.append('categorys', category);
             });
@@ -50,7 +48,9 @@ const ShwarmasPage = () => {
             setProducts(data.content);
             setPagination(prev => ({
                 ...prev,
-                totalPages: data.totalPages
+                currentPage: data.number,
+                totalPages: data.totalPages,
+                size: data.size
             }));
         } catch (error) {
             console.error('Error fetching products:', error);
