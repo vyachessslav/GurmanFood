@@ -1,22 +1,14 @@
 package com.gmail.v.c.charkin.gurmanfood.controller;
 
-import ch.qos.logback.classic.Logger;
 import com.gmail.v.c.charkin.gurmanfood.constants.Pages;
-import com.gmail.v.c.charkin.gurmanfood.constants.PathConstants;
 import com.gmail.v.c.charkin.gurmanfood.dto.request.UserRequest;
 import com.gmail.v.c.charkin.gurmanfood.dto.response.MessageResponse;
 import com.gmail.v.c.charkin.gurmanfood.service.RegistrationService;
 import com.gmail.v.c.charkin.gurmanfood.utils.ControllerUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor

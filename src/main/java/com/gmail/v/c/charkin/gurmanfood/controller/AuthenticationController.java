@@ -1,10 +1,8 @@
 package com.gmail.v.c.charkin.gurmanfood.controller;
 
-import ch.qos.logback.classic.Logger;
 import com.gmail.v.c.charkin.gurmanfood.configuration.JwtTokenProvider;
 import com.gmail.v.c.charkin.gurmanfood.constants.Pages;
 import com.gmail.v.c.charkin.gurmanfood.constants.PathConstants;
-import com.gmail.v.c.charkin.gurmanfood.domain.User;
 import com.gmail.v.c.charkin.gurmanfood.dto.request.LoginRequest;
 import com.gmail.v.c.charkin.gurmanfood.dto.request.PasswordResetRequest;
 import com.gmail.v.c.charkin.gurmanfood.dto.response.JwtResponse;
@@ -13,9 +11,6 @@ import com.gmail.v.c.charkin.gurmanfood.repository.UserRepository;
 import com.gmail.v.c.charkin.gurmanfood.security.UserPrincipal;
 import com.gmail.v.c.charkin.gurmanfood.service.AuthenticationService;
 import com.gmail.v.c.charkin.gurmanfood.utils.ControllerUtils;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +19,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;

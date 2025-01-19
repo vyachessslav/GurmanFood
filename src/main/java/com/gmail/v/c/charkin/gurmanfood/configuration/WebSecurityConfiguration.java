@@ -1,7 +1,7 @@
 package com.gmail.v.c.charkin.gurmanfood.configuration;
 
 import com.gmail.v.c.charkin.gurmanfood.security.UserDetailsServiceImpl;
-import com.gmail.v.c.charkin.gurmanfood.service.impl.UserServiceImpl;
+import com.gmail.v.c.charkin.gurmanfood.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +24,7 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
     private final UserDetailsServiceImpl userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;

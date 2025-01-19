@@ -1,4 +1,4 @@
-package com.gmail.v.c.charkin.gurmanfood.service.impl;
+package com.gmail.v.c.charkin.gurmanfood.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

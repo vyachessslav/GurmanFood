@@ -1,5 +1,7 @@
 package com.gmail.v.c.charkin.gurmanfood.service;
 
+import com.gmail.v.c.charkin.gurmanfood.constants.ErrorMessage;
+import com.gmail.v.c.charkin.gurmanfood.constants.SuccessMessage;
 import com.gmail.v.c.charkin.gurmanfood.domain.Order;
 import com.gmail.v.c.charkin.gurmanfood.domain.Shawarma;
 import com.gmail.v.c.charkin.gurmanfood.domain.User;
@@ -7,31 +9,106 @@ import com.gmail.v.c.charkin.gurmanfood.dto.request.ShawarmaRequest;
 import com.gmail.v.c.charkin.gurmanfood.dto.request.SearchRequest;
 import com.gmail.v.c.charkin.gurmanfood.dto.response.MessageResponse;
 import com.gmail.v.c.charkin.gurmanfood.dto.response.UserInfoResponse;
+import com.gmail.v.c.charkin.gurmanfood.repository.OrderRepository;
+import com.gmail.v.c.charkin.gurmanfood.repository.ShawarmaRepository;
+import com.gmail.v.c.charkin.gurmanfood.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
-public interface AdminService {
+import java.io.File;
+import java.io.IOException;
+import java.util.UUID;
 
-    Page<Shawarma> getShawarmas(Pageable pageable);
+@Service
+@RequiredArgsConstructor
+public class AdminService {
 
-    Page<Shawarma> searchShawarmas(SearchRequest request, Pageable pageable);
+    @Value("${upload.path}")
+    private String uploadPath;
 
-    Page<User> getUsers(Pageable pageable);
+    private final UserRepository userRepository;
+    private final ShawarmaRepository shawarmaRepository;
+    private final OrderRepository orderRepository;
+    private final ModelMapper modelMapper;
 
-    Page<User> searchUsers(SearchRequest request, Pageable pageable);
 
-    Order getOrder(Long orderId);
+    public Page<Shawarma> getShawarmas(Pageable pageable) {
+        return shawarmaRepository.findAllByOrderByPriceAsc(pageable);
+    }
 
-    Page<Order> getOrders(Pageable pageable);
+    public Page<Shawarma> searchShawarmas(SearchRequest request, Pageable pageable) {
+        return shawarmaRepository.searchShawarmas(request.getSearchType(), request.getText(), pageable);
+    }
 
-    Page<Order> searchOrders(SearchRequest request, Pageable pageable);
+    public Page<User> getUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
 
-    Shawarma getShawarmaById(Long shawarmaId);
+    public Page<User> searchUsers(SearchRequest request, Pageable pageable) {
+        return userRepository.searchUsers(request.getSearchType(), request.getText(), pageable);
+    }
 
-    MessageResponse editShawarma(ShawarmaRequest shawarmaRequest, MultipartFile file);
+    public Order getOrder(Long orderId) {
+        return orderRepository.getById(orderId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ErrorMessage.ORDER_NOT_FOUND));
+    }
 
-    MessageResponse addShawarma(ShawarmaRequest shawarmaRequest, MultipartFile file);
+    public Page<Order> getOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable);
 
-    UserInfoResponse getUserById(Long userId, Pageable pageable);
+    }
+
+    public Page<Order> searchOrders(SearchRequest request, Pageable pageable) {
+        return orderRepository.searchOrders(request.getSearchType(), request.getText(), pageable);
+    }
+
+    public Shawarma getShawarmaById(Long shawarmaId) {
+        return shawarmaRepository.findById(shawarmaId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ErrorMessage.SHAWARMA_NOT_FOUND));
+    }
+
+    @SneakyThrows
+    @Transactional
+    public MessageResponse editShawarma(ShawarmaRequest shawarmaRequest, MultipartFile file) {
+        return saveShawarma(shawarmaRequest, file, SuccessMessage.SHAWARMA_EDITED);
+    }
+
+    @SneakyThrows
+    @Transactional
+    public MessageResponse addShawarma(ShawarmaRequest shawarmaRequest, MultipartFile file) {
+        return saveShawarma(shawarmaRequest, file, SuccessMessage.SHAWARMA_ADDED);
+    }
+
+    public UserInfoResponse getUserById(Long userId, Pageable pageable) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, ErrorMessage.USER_NOT_FOUND));
+        Page<Order> orders = orderRepository.findOrderByUserId(userId, pageable);
+        return new UserInfoResponse(user, orders);
+    }
+
+    private MessageResponse saveShawarma(ShawarmaRequest shawarmaRequest, MultipartFile file, String message) throws IOException {
+        Shawarma shawarma = modelMapper.map(shawarmaRequest, Shawarma.class);
+        if (file != null && !file.getOriginalFilename().isEmpty()) {
+            File uploadDir = new File(uploadPath);
+
+            if (!uploadDir.exists()) {
+                uploadDir.mkdir();
+            }
+            String uuidFile = UUID.randomUUID().toString();
+            String resultFilename = uuidFile + "." + file.getOriginalFilename();
+            file.transferTo(new File(uploadPath + "/" + resultFilename));
+            shawarma.setFilename(resultFilename);
+        }
+        shawarmaRepository.save(shawarma);
+        return new MessageResponse("alert-success", message);
+    }
 }
