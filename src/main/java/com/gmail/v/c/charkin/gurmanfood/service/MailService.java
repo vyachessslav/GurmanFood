@@ -30,7 +30,7 @@ public class MailService {
     public void sendMessageHtml(String to, String subject, String template, Map<String, Object> attributes) {
         ExecutorService executor = Executors.newFixedThreadPool(10);
         executor.execute(() -> {
-            attributes.put("url", "http://" + hostname);
+            attributes.put("url", "https://" + hostname);
             Context thymeleafContext = new Context();
             thymeleafContext.setVariables(attributes);
             String htmlBody = thymeleafTemplateEngine.process("email/" + template, thymeleafContext);

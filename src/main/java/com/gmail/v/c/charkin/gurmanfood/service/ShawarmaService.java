@@ -5,7 +5,6 @@ import com.gmail.v.c.charkin.gurmanfood.domain.Shawarma;
 import com.gmail.v.c.charkin.gurmanfood.dto.request.SearchRequest;
 import com.gmail.v.c.charkin.gurmanfood.repository.ShawarmaRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,6 @@ import java.util.List;
 public class ShawarmaService {
 
     private final ShawarmaRepository shawarmaRepository;
-    private final ModelMapper modelMapper;
 
     public Shawarma getShawarmaById(Long shawarmaId) {
         return shawarmaRepository.findById(shawarmaId)

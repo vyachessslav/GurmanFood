@@ -26,6 +26,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -97,11 +98,12 @@ public class AdminService {
 
     private MessageResponse saveShawarma(ShawarmaRequest shawarmaRequest, MultipartFile file, String message) throws IOException {
         Shawarma shawarma = modelMapper.map(shawarmaRequest, Shawarma.class);
-        if (file != null && !file.getOriginalFilename().isEmpty()) {
+        if (file != null && !Objects.requireNonNull(file.getOriginalFilename()).isEmpty()) {
             File uploadDir = new File(uploadPath);
-
             if (!uploadDir.exists()) {
-                uploadDir.mkdir();
+                if (!uploadDir.mkdir()) {
+                    throw new IOException();
+                }
             }
             String uuidFile = UUID.randomUUID().toString();
             String resultFilename = uuidFile + "." + file.getOriginalFilename();
