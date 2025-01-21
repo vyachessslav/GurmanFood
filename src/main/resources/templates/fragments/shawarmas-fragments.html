@@ -15,15 +15,15 @@
 </div>
 
 <div th:fragment="category-item" class="col-2 float-left">
-    <a th:href="${'/shawarma?categorys=' + category}">
+    <a th:href="${'/shawarma?categories=' + category}">
         <img class="img-fluid" th:src="${src}" alt="">
     </a>
 </div>
 
 <div th:fragment="shawarmas-category-checkbox(category)" class="checkbox">
     <label>
-        <input th:value="${category}" type="checkbox" name="categorys" onChange="this.form.submit()"
-               th:checked="${searchRequest.getCategorys() != null ? #arrays.contains(searchRequest.getCategorys(), category) : false}"/>
+        <input th:value="${category}" type="checkbox" name="categories" onChange="this.form.submit()"
+               th:checked="${searchRequest.getCategories() != null ? #arrays.contains(searchRequest.getCategories(), category) : false}"/>
         <span class="cr"><i class="cr-icon fas fa-check"></i></span>
         <th:block th:text="${category}"></th:block>
     </label>
@@ -31,8 +31,8 @@
 
 <div th:fragment="shawarmas-morality-checkbox(morality)" class="checkbox">
     <label>
-        <input th:value="${morality}" type="checkbox" name="moralitys" onChange="this.form.submit()"
-               th:checked="${searchRequest.getMoralitys() != null ? #arrays.contains(searchRequest.getMoralitys(), morality) : false}"/>
+        <input th:value="${morality}" type="checkbox" name="moralities" onChange="this.form.submit()"
+               th:checked="${searchRequest.getMoralities() != null ? #arrays.contains(searchRequest.getMoralities(), morality) : false}"/>
         <span class="cr"><i class="cr-icon fas fa-check"></i></span>
         <th:block th:text="${#strings.capitalize(morality)}"></th:block>
     </label>

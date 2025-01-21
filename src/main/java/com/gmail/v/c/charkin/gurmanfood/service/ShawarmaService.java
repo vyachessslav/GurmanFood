@@ -36,8 +36,8 @@ public class ShawarmaService {
         Integer startingPrice = request.getPrice();
         Integer endingPrice = startingPrice + (startingPrice == 0 ? 100000 : 100);
         return shawarmaRepository.getShawarmasByFilterParams(
-                request.getCategorys(),
-                request.getMoralitys(),
+                request.getCategories(),
+                request.getMoralities(),
                 startingPrice,
                 endingPrice,
                 pageable);

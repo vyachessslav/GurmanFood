@@ -14,8 +14,8 @@ const ShwarmasPage = () => {
     });
 
     const [searchRequest, setSearchRequest] = useState({
-        categorys: [],      //
-        moralitys: [],
+        categories: [],      //
+        moralities: [],
         startingPrice: 0,
         endingPrice: 999999,
         searchType: 'shawarmaTitle',
@@ -36,11 +36,11 @@ const ShwarmasPage = () => {
             });
 
 
-            searchRequest.categorys.forEach(category => {
-                params.append('categorys', category);
+            searchRequest.categories.forEach(category => {
+                params.append('categories', category);
             });
-            searchRequest.moralitys.forEach(morality => {
-                params.append('moralitys', morality);
+            searchRequest.moralities.forEach(morality => {
+                params.append('moralities', morality);
             });
 
             url.search = params.toString();

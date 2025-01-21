@@ -85,14 +85,14 @@ const HomePage = () => {
                 <div className="row">
                     <div className="col-lg-6">
                         <div className="card mb-5">
-                            <Link to="/shawarma?moralitys=Харам">
+                            <Link to="/shawarma?moralities=Харам">
                                 <img className="img-fluid" src="https://ih1.redbubble.net/image.1914967287.1977/st,small,845x845-pad,1000x1000,f8f8f8.jpg" alt="Харам" />
                             </Link>
                         </div>
                     </div>
                     <div className="col-lg-6">
                         <div className="card mb-5">
-                            <Link to="/shawarma?moralitys=Халяль">
+                            <Link to="/shawarma?moralities=Халяль">
                                 <img className="img-fluid" src="https://cdn-icons-png.flaticon.com/512/84/84666.png" alt="Халяль" />
                             </Link>
                         </div>
