@@ -1,9 +1,7 @@
-
 import React from 'react';
 
-const Pagination = ({ currentPage, totalPages, onPageChange, className = '' }) => {
+const Pagination = ({ currentPage, totalPages, onPageChange, onSizeChange, className = '' }) => {
     const pageSizes = [12, 24, 36];
-
 
     const getPageNumbers = () => {
         const pages = [];
@@ -64,12 +62,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '' }) =
                     <span className="page-link text-dark">Размер страницы</span>
                 </li>
                 {pageSizes.map(size => (
-                    <li key={size} className={`page-item`}>
+                    <li key={size} className="page-item">
                         <button
-                            className={`page-link text-dark`}
-                            onClick={() => {
-                                console.log(`Change page size to ${size}`);
-                            }}
+                            className="page-link text-dark"
+                            onClick={() => onSizeChange(size)}
                         >
                             {size}
                         </button>
