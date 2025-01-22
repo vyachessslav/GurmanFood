@@ -1,9 +1,7 @@
 package com.gmail.v.c.charkin.gurmanfood.security;
 
-import ch.qos.logback.classic.Logger;
 import com.gmail.v.c.charkin.gurmanfood.domain.User;
 import com.gmail.v.c.charkin.gurmanfood.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.userdetails.UserDetails;

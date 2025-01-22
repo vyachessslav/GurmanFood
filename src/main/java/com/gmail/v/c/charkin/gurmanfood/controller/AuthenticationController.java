@@ -5,16 +5,16 @@ import com.gmail.v.c.charkin.gurmanfood.constants.Pages;
 import com.gmail.v.c.charkin.gurmanfood.constants.PathConstants;
 import com.gmail.v.c.charkin.gurmanfood.dto.request.LoginRequest;
 import com.gmail.v.c.charkin.gurmanfood.dto.request.PasswordResetRequest;
+import com.gmail.v.c.charkin.gurmanfood.dto.request.UserRequest;
 import com.gmail.v.c.charkin.gurmanfood.dto.response.JwtResponse;
 import com.gmail.v.c.charkin.gurmanfood.dto.response.MessageResponse;
-import com.gmail.v.c.charkin.gurmanfood.repository.UserRepository;
 import com.gmail.v.c.charkin.gurmanfood.security.UserPrincipal;
 import com.gmail.v.c.charkin.gurmanfood.service.AuthenticationService;
+import com.gmail.v.c.charkin.gurmanfood.service.RegistrationService;
 import com.gmail.v.c.charkin.gurmanfood.utils.ControllerUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -40,44 +40,43 @@ public class AuthenticationController {
 
     private final AuthenticationService authService;
     private final ControllerUtils controllerUtils;
-    private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
+    private final RegistrationService registrationService;
+
+    @PostMapping("/registration")
+    public ResponseEntity<MessageResponse> registration(@RequestBody UserRequest user) {
+        MessageResponse response = registrationService.registration(user);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/activate/{code}")
+    public String activateEmailCode(@PathVariable String code, Model model) {
+        return controllerUtils.setAlertMessage(model, Pages.LOGIN, registrationService.activateEmailCode(code));
+    }
+
     @PostMapping("/login")
-
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        //Logger log = null;
-        //log.info("Login attempt for email: {}", loginRequest.getEmail());
         try {
-
             UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getEmail());
-            //log.info("User found: {}", userDetails.getUsername());
-
             if (!passwordEncoder.matches(loginRequest.getPassword(), userDetails.getPassword())) {
                 throw new BadCredentialsException("Invalid password");
             }
-
-
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
                     userDetails.getAuthorities()
             );
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtTokenProvider.generateToken(authentication);
-
             return ResponseEntity.ok(new JwtResponse(jwt));
 
         } catch (UsernameNotFoundException | LockedException e) {
-            //log.error("Login error: ", e);
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(new MessageResponse("error", e.getMessage()));
         } catch (BadCredentialsException e) {
-            //log.error("Login error: ", e);
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(new MessageResponse("error", "Неверный адрес Электронной Почты или Пароль"));
