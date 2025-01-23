@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import static com.gmail.v.c.charkin.gurmanfood.constants.PathConstants.POPULAR;
+import static com.gmail.v.c.charkin.gurmanfood.constants.PathConstants.SEARCH;
+
 @Controller
 @RequestMapping(PathConstants.SHAWARMA)
 public class ShawarmaController {
@@ -19,7 +22,7 @@ public class ShawarmaController {
     public ShawarmaController(ShawarmaService shawarmaService) {
         this.shawarmaService = shawarmaService;
     }
-    @GetMapping("/popular")
+    @GetMapping(POPULAR)
     public ResponseEntity<?> getPopularShawarmas() {
         return ResponseEntity.ok(new PageResponse<>(shawarmaService.getPopularShawarmas()));
     }
@@ -34,7 +37,7 @@ public class ShawarmaController {
         return ResponseEntity.ok(shawarmaService.getShawarmasByFilterParams(request, pageable));
     }
 
-    @GetMapping("/search")
+    @GetMapping(SEARCH)
     public ResponseEntity<?> searchShawarmas(SearchRequest request, Pageable pageable) {
         return ResponseEntity.ok(shawarmaService.searchShawarmas(request, pageable));
     }

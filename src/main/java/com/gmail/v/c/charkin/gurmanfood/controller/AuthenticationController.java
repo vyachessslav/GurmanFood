@@ -1,7 +1,6 @@
 package com.gmail.v.c.charkin.gurmanfood.controller;
 
 import com.gmail.v.c.charkin.gurmanfood.configuration.JwtTokenProvider;
-import com.gmail.v.c.charkin.gurmanfood.constants.Pages;
 import com.gmail.v.c.charkin.gurmanfood.constants.PathConstants;
 import com.gmail.v.c.charkin.gurmanfood.dto.request.LoginRequest;
 import com.gmail.v.c.charkin.gurmanfood.dto.request.PasswordResetRequest;
@@ -33,6 +32,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
+import static com.gmail.v.c.charkin.gurmanfood.constants.Pages.FORGOT_PASSWORD;
+import static com.gmail.v.c.charkin.gurmanfood.constants.Pages.RESET_PASSWORD;
+import static com.gmail.v.c.charkin.gurmanfood.constants.PathConstants.*;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(PathConstants.AUTH)
@@ -45,18 +48,18 @@ public class AuthenticationController {
     private final PasswordEncoder passwordEncoder;
     private final RegistrationService registrationService;
 
-    @PostMapping("/registration")
+    @PostMapping(REGISTRATION)
     public ResponseEntity<MessageResponse> registration(@RequestBody UserRequest user) {
         MessageResponse response = registrationService.registration(user);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/activate/{code}")
+    @GetMapping(ACTIVATE + "/{code}")
     public String activateEmailCode(@PathVariable String code, Model model) {
-        return controllerUtils.setAlertMessage(model, Pages.LOGIN, registrationService.activateEmailCode(code));
+        return controllerUtils.setAlertMessage(model, LOGIN, registrationService.activateEmailCode(code));
     }
 
-    @PostMapping("/login")
+    @PostMapping(LOGIN)
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
             UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getEmail());
@@ -86,17 +89,17 @@ public class AuthenticationController {
 
 
 
-    @GetMapping("/forgot")
+    @GetMapping(FORGOT)
     public String forgotPassword() {
-        return Pages.FORGOT_PASSWORD;
+        return FORGOT_PASSWORD;
     }
 
-    @PostMapping("/forgot")
+    @PostMapping(FORGOT)
     public String forgotPassword(@RequestParam String email, Model model) {
-        return controllerUtils.setAlertMessage(model, Pages.FORGOT_PASSWORD, authService.sendPasswordResetCode(email));
+        return controllerUtils.setAlertMessage(model, FORGOT_PASSWORD, authService.sendPasswordResetCode(email));
     }
 
-    @GetMapping("/user")
+    @GetMapping(USER)
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserPrincipal userDetails) {
         try {
             return ResponseEntity.ok(userDetails);
@@ -107,22 +110,22 @@ public class AuthenticationController {
         }
     }
 
-    @GetMapping("/reset/{code}")
+    @GetMapping(RESET + "/{code}")
     public String resetPassword(@PathVariable String code, Model model) {
         model.addAttribute("email", authService.getEmailByPasswordResetCode(code));
-        return Pages.RESET_PASSWORD;
+        return RESET_PASSWORD;
     }
 
-    @PostMapping("/reset")
+    @PostMapping(RESET)
     public String resetPassword(@Valid PasswordResetRequest request, BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes, Model model) {
         if (controllerUtils.validateInputFields(bindingResult, model, "email", request.getEmail())) {
-            return Pages.RESET_PASSWORD;
+            return RESET_PASSWORD;
         }
         MessageResponse messageResponse = authService.resetPassword(request);
         if (controllerUtils.validateInputField(model, messageResponse, "email", request.getEmail())) {
-            return Pages.RESET_PASSWORD;
+            return RESET_PASSWORD;
         }
-        return controllerUtils.setAlertFlashMessage(redirectAttributes, PathConstants.LOGIN, messageResponse);
+        return controllerUtils.setAlertFlashMessage(redirectAttributes, LOGIN, messageResponse);
     }
 }

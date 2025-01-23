@@ -28,8 +28,3 @@ public class HomeController {
     }
 }
 
-@Data
-@AllArgsConstructor
-class PageResponse<T> {
-    private List<T> content;
-}

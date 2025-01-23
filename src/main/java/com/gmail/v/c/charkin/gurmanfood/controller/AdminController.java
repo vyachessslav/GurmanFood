@@ -19,6 +19,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
+import static com.gmail.v.c.charkin.gurmanfood.constants.Pages.ORDERS;
+import static com.gmail.v.c.charkin.gurmanfood.constants.PathConstants.*;
+
 @Controller
 @RequestMapping(PathConstants.ADMIN)
 @PreAuthorize("hasAuthority('ADMIN')")
@@ -28,55 +31,55 @@ public class AdminController {
     private final AdminService adminService;
     private final ControllerUtils controllerUtils;
 
-    @GetMapping("/shawarmas")
+    @GetMapping(SHAWARMA)
     public String getShawarmas(Pageable pageable, Model model) {
         controllerUtils.addPagination(model, adminService.getShawarmas(pageable));
         return Pages.ADMIN_SHAWARMAS;
     }
 
-    @GetMapping("/shawarmas/search")
+    @GetMapping(SHAWARMAS + "/search")
     public String searchShawarmas(SearchRequest request, Pageable pageable, Model model) {
         controllerUtils.addPagination(request, model, adminService.searchShawarmas(request, pageable));
         return Pages.ADMIN_SHAWARMAS;
     }
 
-    @GetMapping("/users")
+    @GetMapping(USERS)
     public String getUsers(Pageable pageable, Model model) {
         controllerUtils.addPagination(model, adminService.getUsers(pageable));
         return Pages.ADMIN_ALL_USERS;
     }
 
-    @GetMapping("/users/search")
+    @GetMapping(USERS + "/search")
     public String searchUsers(SearchRequest request, Pageable pageable, Model model) {
         controllerUtils.addPagination(request, model, adminService.searchUsers(request, pageable));
         return Pages.ADMIN_ALL_USERS;
     }
 
-    @GetMapping("/order/{orderId}")
+    @GetMapping(ORDER + "/{orderId}")
     public String getOrder(@PathVariable Long orderId, Model model) {
         model.addAttribute("order", adminService.getOrder(orderId));
         return Pages.ORDER;
     }
 
-    @GetMapping("/orders")
+    @GetMapping(ORDERS)
     public String getOrders(Pageable pageable, Model model) {
         controllerUtils.addPagination(model, adminService.getOrders(pageable));
         return Pages.ORDERS;
     }
 
-    @GetMapping("/orders/search")
+    @GetMapping(ORDERS + "/search")
     public String searchOrders(SearchRequest request, Pageable pageable, Model model) {
         controllerUtils.addPagination(request, model, adminService.searchOrders(request, pageable));
         return Pages.ORDERS;
     }
 
-    @GetMapping("/shawarma/{shawarmaId}")
+    @GetMapping(SHAWARMA + "/{shawarmaId}")
     public String getShawarma(@PathVariable Long shawarmaId, Model model) {
         model.addAttribute("shawarma", adminService.getShawarmaById(shawarmaId));
         return Pages.ADMIN_EDIT_SHAWARMA;
     }
 
-    @PostMapping("/edit/shawarma")
+    @PostMapping(EDIT + "/shawarma")
     public String editShawarma(@Valid ShawarmaRequest shawarma, BindingResult bindingResult, Model model,
                               @RequestParam("file") MultipartFile file, RedirectAttributes attributes) {
         if (controllerUtils.validateInputFields(bindingResult, model, "shawarma", shawarma)) {
@@ -85,12 +88,12 @@ public class AdminController {
         return controllerUtils.setAlertFlashMessage(attributes, "/admin/shawarmas", adminService.editShawarma(shawarma, file));
     }
 
-    @GetMapping("/add/shawarma")
+    @GetMapping(ADD + SHAWARMA)
     public String addShawarma() {
         return Pages.ADMIN_ADD_SHAWARMA;
     }
 
-    @PostMapping("/add/shawarma")
+    @PostMapping(ADD + SHAWARMA)
     public String addShawarma(@Valid ShawarmaRequest shawarma, BindingResult bindingResult, Model model,
                              @RequestParam("file") MultipartFile file, RedirectAttributes attributes) {
         if (controllerUtils.validateInputFields(bindingResult, model, "shawarma", shawarma)) {
@@ -100,7 +103,7 @@ public class AdminController {
         return controllerUtils.setAlertFlashMessage(attributes, "/admin/shawarmas", adminService.addShawarma(shawarma, file));
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping(USER + "/{userId}")
     public String getUserById(@PathVariable Long userId, Model model, Pageable pageable) {
         UserInfoResponse userResponse = adminService.getUserById(userId, pageable);
         model.addAttribute("user", userResponse.getUser());

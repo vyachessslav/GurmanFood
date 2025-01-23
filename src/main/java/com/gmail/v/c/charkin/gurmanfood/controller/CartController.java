@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+import static com.gmail.v.c.charkin.gurmanfood.constants.PathConstants.ADD;
+import static com.gmail.v.c.charkin.gurmanfood.constants.PathConstants.REMOVE;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(PathConstants.CART)
@@ -25,7 +28,7 @@ public class CartController {
         return ResponseEntity.ok(cartService.getShawarmasInCart());
     }
 
-    @PostMapping("/add")
+    @PostMapping(ADD)
     public ResponseEntity<?> addShawarmaToCart(@RequestParam("shawarmaId") Long shawarmaId) {
         try {
             cartService.addShawarmaToCart(shawarmaId);
@@ -35,7 +38,7 @@ public class CartController {
         }
     }
 
-    @PostMapping("/remove")
+    @PostMapping(REMOVE)
     public ResponseEntity<?> removeShawarmaFromCart(@RequestParam("shawarmaId") Long shawarmaId) {
         try {
             cartService.removeShawarmaFromCart(shawarmaId);
