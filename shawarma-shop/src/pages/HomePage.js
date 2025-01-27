@@ -70,10 +70,12 @@ const HomePage = () => {
                     {categories.map((category, index) => (
                         <div key={index} className="col">
                             <div className="card h-100">
-                                <img className="card-img-top" src={category.imageUrl} alt={category.name} />
-                                <div className="card-body">
-                                    <h5 className="card-title">{category.name}</h5>
-                                </div>
+                                <Link to={`/shawarma?categories=${category.name}`}>
+                                    <img className="card-img-top" src={category.imageUrl} alt={category.name} />
+                                    <div className="card-body">
+                                        <h5 className="card-title">{category.name}</h5>
+                                    </div>
+                                </Link>
                             </div>
                         </div>
                     ))}
@@ -111,15 +113,17 @@ const HomePage = () => {
                                     {products.slice(page * 4, (page + 1) * 4).map((product, index) => (
                                         <div key={index} className="col-3">
                                             <div className="card">
-                                                <img
-                                                    className="card-img-top"
-                                                    src={`/img/${product.filename}`}
-                                                    alt={product.shawarmaTitle}
-                                                />
-                                                <div className="card-body">
-                                                    <h5 className="card-title">{product.shawarmaTitle}</h5>
-                                                    <p className="card-text">{product.price} ₽</p>
-                                                </div>
+                                                <Link to={`/shawarma/${product.id}`}>
+                                                    <img
+                                                        className="card-img-top"
+                                                        src={`/img/${product.filename}`}
+                                                        alt={product.shawarmaTitle}
+                                                    />
+                                                    <div className="card-body">
+                                                        <h5 className="card-title">{product.shawarmaTitle}</h5>
+                                                        <p className="card-text">{product.price} ₽</p>
+                                                    </div>
+                                                </Link>
                                             </div>
                                         </div>
                                     ))}
