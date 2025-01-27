@@ -1,12 +1,43 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
+    const navigate = useNavigate();
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
         fetchProducts();
     }, []);
+
+    const handleHalalClick = () => {
+        navigate('/shawarma', {
+            state: {
+                initialFilters: {
+                    categorys: [],
+                    moralitys: ['Халяль'],
+                    startingPrice: 0,
+                    endingPrice: 999999,
+                    searchType: 'shawarmaTitle',
+                    text: ''
+                }
+            }
+        });
+    };
+    const handleHaramClick = () => {
+        navigate('/shawarma', {
+            state: {
+                initialFilters: {
+                    categorys: [],
+                    moralitys: ['Харам'],
+                    startingPrice: 0,
+                    endingPrice: 999999,
+                    searchType: 'shawarmaTitle',
+                    text: ''
+                }
+            }
+        });
+    };
 
     const fetchProducts = async () => {
         try {
@@ -84,16 +115,20 @@ const HomePage = () => {
             <div className="container mt-5">
                 <div className="row">
                     <div className="col-lg-6">
-                        <div className="card mb-5">
-                            <Link to="/shawarma?moralitys=Харам">
-                                <img className="img-fluid" src="https://ih1.redbubble.net/image.1914967287.1977/st,small,845x845-pad,1000x1000,f8f8f8.jpg" alt="Харам" />
-                            </Link>
+                        <div className="card mb-5"  onClick={handleHaramClick}>
+                                <img className="img-fluid"
+                                     src="https://ih1.redbubble.net/image.1914967287.1977/st,small,845x845-pad,1000x1000,f8f8f8.jpg"
+                                     alt="Харам"/>
                         </div>
                     </div>
                     <div className="col-lg-6">
-                        <div className="card mb-5">
+                        <div className="card mb-5" onClick={handleHalalClick}>
                             <Link to="/shawarma?moralitys=Халяль">
-                                <img className="img-fluid" src="https://cdn-icons-png.flaticon.com/512/84/84666.png" alt="Халяль" />
+                            <img
+                                className="img-fluid"
+                                src="https://cdn-icons-png.flaticon.com/512/84/84666.png"
+                                alt="Халяль"
+                            />
                             </Link>
                         </div>
                     </div>

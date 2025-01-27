@@ -3,6 +3,7 @@ import Pagination from '../components/Pagination';
 import Sidebar from '../components/Sidebar';
 import Search from '../components/Search';
 import ProductCard from '../components/ProductCard';
+import {useLocation} from "react-router-dom";
 
 const ShwarmasPage = () => {
     const [products, setProducts] = useState([]);
@@ -11,14 +12,16 @@ const ShwarmasPage = () => {
         totalPages: 0,
         size: 12
     });
-
-    const [searchRequest, setSearchRequest] = useState({
-        categorys: [],
-        moralitys: [],
-        startingPrice: 0,
-        endingPrice: 999999,
-        searchType: 'shawarmaTitle',
-        text: ''
+    const location = useLocation();
+    const [searchRequest, setSearchRequest] = useState(() => {
+        return location.state?.initialFilters || {
+            categorys: [],
+            moralitys: [],
+            startingPrice: 0,
+            endingPrice: 999999,
+            searchType: 'shawarmaTitle',
+            text: ''
+        };
     });
 
     useEffect(() => {
