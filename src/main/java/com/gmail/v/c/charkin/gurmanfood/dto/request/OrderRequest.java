@@ -2,9 +2,7 @@ package com.gmail.v.c.charkin.gurmanfood.dto.request;
 
 import com.gmail.v.c.charkin.gurmanfood.constants.ErrorMessage;
 import lombok.Data;
-
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 

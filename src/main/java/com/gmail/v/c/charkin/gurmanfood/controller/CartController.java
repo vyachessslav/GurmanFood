@@ -1,19 +1,20 @@
 package com.gmail.v.c.charkin.gurmanfood.controller;
 
-import com.gmail.v.c.charkin.gurmanfood.constants.Pages;
 import com.gmail.v.c.charkin.gurmanfood.constants.PathConstants;
 import com.gmail.v.c.charkin.gurmanfood.domain.Shawarma;
 import com.gmail.v.c.charkin.gurmanfood.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+
+import static com.gmail.v.c.charkin.gurmanfood.constants.PathConstants.ADD;
+import static com.gmail.v.c.charkin.gurmanfood.constants.PathConstants.REMOVE;
 
 @Controller
 @RequiredArgsConstructor
@@ -27,7 +28,7 @@ public class CartController {
         return ResponseEntity.ok(cartService.getShawarmasInCart());
     }
 
-    @PostMapping("/add")
+    @PostMapping(ADD)
     public ResponseEntity<?> addShawarmaToCart(@RequestParam("shawarmaId") Long shawarmaId) {
         try {
             cartService.addShawarmaToCart(shawarmaId);
@@ -37,7 +38,7 @@ public class CartController {
         }
     }
 
-    @PostMapping("/remove")
+    @PostMapping(REMOVE)
     public ResponseEntity<?> removeShawarmaFromCart(@RequestParam("shawarmaId") Long shawarmaId) {
         try {
             cartService.removeShawarmaFromCart(shawarmaId);

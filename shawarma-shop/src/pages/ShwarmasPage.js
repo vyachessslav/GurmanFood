@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Pagination from '../components/Pagination';
 import Sidebar from '../components/Sidebar';
@@ -37,11 +38,12 @@ const ShwarmasPage = () => {
                 ...searchRequest
             });
 
-            searchRequest.categorys.forEach(category => {
-                params.append('categorys', category);
+
+            searchRequest.categories.forEach(category => {
+                params.append('categories', category);
             });
-            searchRequest.moralitys.forEach(morality => {
-                params.append('moralitys', morality);
+            searchRequest.moralities.forEach(morality => {
+                params.append('moralities', morality);
             });
 
             url.search = params.toString();
@@ -51,9 +53,7 @@ const ShwarmasPage = () => {
             setProducts(data.content);
             setPagination(prev => ({
                 ...prev,
-                currentPage: data.number,
-                totalPages: data.totalPages,
-                size: data.size
+                totalPages: data.totalPages
             }));
         } catch (error) {
             console.error('Error fetching products:', error);

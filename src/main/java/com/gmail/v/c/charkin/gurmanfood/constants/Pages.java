@@ -10,8 +10,6 @@ public class Pages {
     public static final String ORDERS = "orders";
     public static final String ORDERING = "ordering";
     public static final String ORDER_FINALIZE = "order-finalize";
-    public static final String SHAWARMA = "shawarma";
-    public static final String SHAWARMAS = "shawarmas";
     public static final String USER_ACCOUNT = "user-account";
     public static final String USER_INFO = "user-info";
     public static final String USER_INFO_EDIT = "user-info-edit";
@@ -19,10 +17,7 @@ public class Pages {
     public static final String FORGOT_PASSWORD = "forgot-password";
     public static final String RESET_PASSWORD = "reset-password";
     public static final String CONTACTS = "contacts";
-    public static final String CART = "cart";
-    public static final String HOME = "home";
     public static final String LOGIN = "login";
-    public static final String REGISTRATION = "registration";
     public static final String ERROR_404 = "error-404";
     public static final String ERROR_500 = "error-500";
 }

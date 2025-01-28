@@ -1,6 +1,5 @@
 package com.gmail.v.c.charkin.gurmanfood.controller;
 
-import com.gmail.v.c.charkin.gurmanfood.constants.Pages;
 import com.gmail.v.c.charkin.gurmanfood.domain.Shawarma;
 import com.gmail.v.c.charkin.gurmanfood.service.ShawarmaService;
 import lombok.AllArgsConstructor;
@@ -8,7 +7,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -30,8 +28,3 @@ public class HomeController {
     }
 }
 
-@Data
-@AllArgsConstructor
-class PageResponse<T> {
-    private List<T> content;
-}

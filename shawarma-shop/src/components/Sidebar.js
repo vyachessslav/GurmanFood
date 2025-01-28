@@ -12,13 +12,13 @@ const Sidebar = ({ filters, setFilters }) => {
         { start: 500, end: 5000, label: '500₽ - 5000₽' }
     ];
 
-    const selectedCategories = filters.categorys || [];
-    const selectedMoralities = filters.moralitys || [];
+    const selectedCategories = filters.categories || [];
+    const selectedMoralities = filters.moralities || [];
 
     const handleCategoryChange = (category) => {
         setFilters(prev => ({
             ...prev,
-            categorys: selectedCategories.includes(category)
+            categories: selectedCategories.includes(category)
                 ? selectedCategories.filter(c => c !== category)
                 : [...selectedCategories, category]
         }));
@@ -27,7 +27,7 @@ const Sidebar = ({ filters, setFilters }) => {
     const handleMoralityChange = (morality) => {
         setFilters(prev => ({
             ...prev,
-            moralitys: selectedMoralities.includes(morality)
+            moralities: selectedMoralities.includes(morality)
                 ? selectedMoralities.filter(m => m !== morality)
                 : [...selectedMoralities, morality]
         }));

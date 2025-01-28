@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
+import static com.gmail.v.c.charkin.gurmanfood.constants.PathConstants.USER;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(PathConstants.ORDER)
@@ -40,7 +42,7 @@ public class OrderController {
         return Pages.ORDERING;
     }
 
-    @GetMapping("/user/orders")
+    @GetMapping(USER + "/orders")
     public String getUserOrdersList(Model model, Pageable pageable) {
         controllerUtils.addPagination(model, orderService.getUserOrdersList(pageable));
         return Pages.ORDERS;

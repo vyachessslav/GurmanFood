@@ -20,6 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
+import static com.gmail.v.c.charkin.gurmanfood.constants.PathConstants.RESET;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(PathConstants.USER)
@@ -33,7 +35,7 @@ public class UserController {
         return Pages.CONTACTS;
     }
 
-    @GetMapping("/reset")
+    @GetMapping(RESET)
     public String passwordReset() {
         return Pages.USER_PASSWORD_RESET;
     }

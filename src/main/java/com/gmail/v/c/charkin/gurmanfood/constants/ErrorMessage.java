@@ -1,7 +1,6 @@
 package com.gmail.v.c.charkin.gurmanfood.constants;
 
 public class ErrorMessage {
-    public static final String CAPTCHA_ERROR = "Fill captcha";
     public static final String EMAIL_NOT_FOUND = "Email not found";
     public static final String PASSWORDS_DO_NOT_MATCH = "Passwords do not match.";
     public static final String EMAIL_IN_USE = "Email is already in use.";

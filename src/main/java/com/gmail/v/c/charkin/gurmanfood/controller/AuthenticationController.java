@@ -1,30 +1,23 @@
 package com.gmail.v.c.charkin.gurmanfood.controller;
 
-import ch.qos.logback.classic.Logger;
 import com.gmail.v.c.charkin.gurmanfood.configuration.JwtTokenProvider;
-import com.gmail.v.c.charkin.gurmanfood.constants.Pages;
 import com.gmail.v.c.charkin.gurmanfood.constants.PathConstants;
-import com.gmail.v.c.charkin.gurmanfood.domain.User;
 import com.gmail.v.c.charkin.gurmanfood.dto.request.LoginRequest;
 import com.gmail.v.c.charkin.gurmanfood.dto.request.PasswordResetRequest;
+import com.gmail.v.c.charkin.gurmanfood.dto.request.UserRequest;
 import com.gmail.v.c.charkin.gurmanfood.dto.response.JwtResponse;
 import com.gmail.v.c.charkin.gurmanfood.dto.response.MessageResponse;
-import com.gmail.v.c.charkin.gurmanfood.repository.UserRepository;
 import com.gmail.v.c.charkin.gurmanfood.security.UserPrincipal;
 import com.gmail.v.c.charkin.gurmanfood.service.AuthenticationService;
+import com.gmail.v.c.charkin.gurmanfood.service.RegistrationService;
 import com.gmail.v.c.charkin.gurmanfood.utils.ControllerUtils;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,6 +32,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
+import static com.gmail.v.c.charkin.gurmanfood.constants.Pages.FORGOT_PASSWORD;
+import static com.gmail.v.c.charkin.gurmanfood.constants.Pages.RESET_PASSWORD;
+import static com.gmail.v.c.charkin.gurmanfood.constants.PathConstants.*;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(PathConstants.AUTH)
@@ -46,44 +43,43 @@ public class AuthenticationController {
 
     private final AuthenticationService authService;
     private final ControllerUtils controllerUtils;
-    private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
-    @PostMapping("/login")
+    private final RegistrationService registrationService;
 
+    @PostMapping(REGISTRATION)
+    public ResponseEntity<MessageResponse> registration(@RequestBody UserRequest user) {
+        MessageResponse response = registrationService.registration(user);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(ACTIVATE + "/{code}")
+    public String activateEmailCode(@PathVariable String code, Model model) {
+        return controllerUtils.setAlertMessage(model, LOGIN, registrationService.activateEmailCode(code));
+    }
+
+    @PostMapping(LOGIN)
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        //Logger log = null;
-        //log.info("Login attempt for email: {}", loginRequest.getEmail());
         try {
-
             UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getEmail());
-            //log.info("User found: {}", userDetails.getUsername());
-
             if (!passwordEncoder.matches(loginRequest.getPassword(), userDetails.getPassword())) {
                 throw new BadCredentialsException("Invalid password");
             }
-
-
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
                     userDetails.getAuthorities()
             );
-
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtTokenProvider.generateToken(authentication);
-
             return ResponseEntity.ok(new JwtResponse(jwt));
 
         } catch (UsernameNotFoundException | LockedException e) {
-            //log.error("Login error: ", e);
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(new MessageResponse("error", e.getMessage()));
         } catch (BadCredentialsException e) {
-            //log.error("Login error: ", e);
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(new MessageResponse("error", "Неверный адрес Электронной Почты или Пароль"));
@@ -93,17 +89,17 @@ public class AuthenticationController {
 
 
 
-    @GetMapping("/forgot")
+    @GetMapping(FORGOT)
     public String forgotPassword() {
-        return Pages.FORGOT_PASSWORD;
+        return FORGOT_PASSWORD;
     }
 
-    @PostMapping("/forgot")
+    @PostMapping(FORGOT)
     public String forgotPassword(@RequestParam String email, Model model) {
-        return controllerUtils.setAlertMessage(model, Pages.FORGOT_PASSWORD, authService.sendPasswordResetCode(email));
+        return controllerUtils.setAlertMessage(model, FORGOT_PASSWORD, authService.sendPasswordResetCode(email));
     }
 
-    @GetMapping("/user")
+    @GetMapping(USER)
     public ResponseEntity<?> getCurrentUser(@AuthenticationPrincipal UserPrincipal userDetails) {
         try {
             return ResponseEntity.ok(userDetails);
@@ -114,22 +110,22 @@ public class AuthenticationController {
         }
     }
 
-    @GetMapping("/reset/{code}")
+    @GetMapping(RESET + "/{code}")
     public String resetPassword(@PathVariable String code, Model model) {
         model.addAttribute("email", authService.getEmailByPasswordResetCode(code));
-        return Pages.RESET_PASSWORD;
+        return RESET_PASSWORD;
     }
 
-    @PostMapping("/reset")
+    @PostMapping(RESET)
     public String resetPassword(@Valid PasswordResetRequest request, BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes, Model model) {
         if (controllerUtils.validateInputFields(bindingResult, model, "email", request.getEmail())) {
-            return Pages.RESET_PASSWORD;
+            return RESET_PASSWORD;
         }
         MessageResponse messageResponse = authService.resetPassword(request);
         if (controllerUtils.validateInputField(model, messageResponse, "email", request.getEmail())) {
-            return Pages.RESET_PASSWORD;
+            return RESET_PASSWORD;
         }
-        return controllerUtils.setAlertFlashMessage(redirectAttributes, PathConstants.LOGIN, messageResponse);
+        return controllerUtils.setAlertFlashMessage(redirectAttributes, LOGIN, messageResponse);
     }
 }

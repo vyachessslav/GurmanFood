@@ -24,14 +24,14 @@ public interface ShawarmaRepository extends JpaRepository<Shawarma, Long> {
     Page<Shawarma> searchShawarmas(String searchType, String text, Pageable pageable);
 
     @Query("SELECT shawarma FROM Shawarma shawarma " +
-            "WHERE (coalesce(:categorys, null) IS NULL OR shawarma.category IN :categorys) " +
-            "AND (coalesce(:moralitys, null) IS NULL OR shawarma.morality IN :moralitys) " +
+            "WHERE (coalesce(:categories, null) IS NULL OR shawarma.category IN :categories) " +
+            "AND (coalesce(:moralities, null) IS NULL OR shawarma.morality IN :moralities) " +
             "AND (coalesce(:priceStart, null) IS NULL OR shawarma.price BETWEEN :priceStart AND :priceEnd) " +
             "ORDER BY shawarma.price ASC")
     Page<Shawarma> getShawarmasByFilterParams(
 
-            List<String> categorys,
-            List<String> moralitys,
+            List<String> categories,
+            List<String> moralities,
             Integer priceStart,
             Integer priceEnd,
             Pageable pageable);
